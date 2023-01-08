@@ -6,7 +6,7 @@ ARG DEFAULT_DATA_DIR="/usr/local/share/template-files/data" \
   DEFAULT_CONF_DIR="/usr/local/share/template-files/config" \
   DEFAULT_TEMPLATE_DIR="/usr/local/share/template-files/defaults"
 
-ARG PACK_LIST="bash tftp-hpa"
+ARG PACK_LIST="bash"
 
 ENV LANG=en_US.UTF-8 \
   ENV=ENV=~/.bashrc \
@@ -50,7 +50,7 @@ ARG \
   BUILD_VERSION="latest" \
   LICENSE="MIT" \
   IMAGE_NAME="tftpd" \
-  BUILD_DATE="Sat Nov 12 03:54:34 PM EST 2022" \
+  BUILD_DATE="Sun Nov 13 12:20:46 PM EST 2022" \
   TIMEZONE="America/New_York"
 
 LABEL maintainer="CasjaysDev <docker-admin@casjaysdev.com>" \
@@ -94,3 +94,4 @@ EXPOSE $EXPOSE_PORTS
 #CMD [ "" ]
 ENTRYPOINT [ "tini", "-p", "SIGTERM", "--", "/usr/local/bin/entrypoint.sh" ]
 HEALTHCHECK --start-period=1m --interval=2m --timeout=3s CMD [ "/usr/local/bin/entrypoint.sh", "healthcheck" ]
+
