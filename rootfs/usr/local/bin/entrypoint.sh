@@ -79,7 +79,7 @@ DATABASE_DIR="" # set database dir
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Healthcheck variables
 HEALTH_ENABLED="yes"                # enable healthcheck [yes/no]
-SERVICES_LIST="tini nginx in.tftpd" # comma seperated list of processes for the healthcheck
+SERVICES_LIST="tini,tftpd,zz-nginx"
 HEALTH_ENDPOINTS=""                 # url endpoints: [http://localhost/health,http://localhost/test]
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Update path var
