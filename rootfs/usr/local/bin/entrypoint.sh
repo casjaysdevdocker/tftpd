@@ -474,6 +474,12 @@ start)
 # Execute primary command
 *)
   if [ $# -eq 0 ]; then
+    # Clean stale pid files from previous container runs on restart
+    if [ ! -f "/run/init.d/entrypoint.pid" ]; then
+      START_SERVICES="yes"
+      rm -f /run/__start_init_scripts.pid /run/init.d/*.pid /run/*.pid
+    fi
+    
     if [ "$START_SERVICES" = "yes" ] || [ ! -f "/run/init.d/entrypoint.pid" ]; then
       echo "$$" >"/run/init.d/entrypoint.pid"
       __start_init_scripts "/usr/local/etc/docker/init.d"
