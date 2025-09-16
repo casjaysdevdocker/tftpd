@@ -1,4 +1,4 @@
-# gitignore created on 07/14/24 at 16:48
+# gitignore created on 09/16/25 at 11:50
 # Disable reminder in prompt
 ignoredirmessage
 
@@ -95,4 +95,9 @@ $RECYCLE.BIN/
 
 # ignore .installed files
 **/.installed
+
+# ignore work in progress files
+**/*.rewrite.sh
+**/*.refactor.sh
+
 
