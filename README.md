@@ -19,17 +19,17 @@ dockermgr update tftpd
 ## Install and run container
   
 ```shell
-mkdir -p "$HOME/.local/share/srv/docker/tftpd/rootfs"
+mkdir -p "$HOME/.local/share/srv/docker/tftpd/volumes"
 git clone "https://github.com/dockermgr/tftpd" "$HOME/.local/share/CasjaysDev/dockermgr/tftpd"
-cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/tftpd/rootfs/." "$HOME/.local/share/srv/docker/tftpd/rootfs/"
+cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/tftpd/rootfs/." "$HOME/.local/share/srv/docker/tftpd/volumes/"
 docker run -d \
 --restart always \
 --privileged \
 --name casjaysdevdocker-tftpd \
 --hostname tftpd \
 -e TZ=${TIMEZONE:-America/New_York} \
--v "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/rootfs/data:/data:z" \
--v "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/rootfs/config:/config:z" \
+-v "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/volumes/data:/data:z" \
+-v "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/volumes/config:/config:z" \
 -p 80:80 \
 casjaysdevdocker/tftpd:latest
 ```
@@ -46,8 +46,8 @@ services:
       - TZ=America/New_York
       - HOSTNAME=tftpd
     volumes:
-      - "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/rootfs/data:/data:z"
-      - "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/rootfs/config:/config:z"
+      - "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/volumes/data:/data:z"
+      - "$HOME/.local/share/srv/docker/casjaysdevdocker-tftpd/volumes/config:/config:z"
     ports:
       - 80:80
     restart: always
