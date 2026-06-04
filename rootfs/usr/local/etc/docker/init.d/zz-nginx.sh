@@ -44,7 +44,7 @@ __script_exit() {
   fi
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SCRIPT_NAME="$(basename "$0" 2>/dev/null)"
+SCRIPT_NAME="${0##*/}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 export PATH="/usr/local/etc/docker/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,30 +93,41 @@ DATABASE_DIR="${DATABASE_DIR_NGINX:-/data/db/sqlite}"
 WWW_ROOT_DIR="/usr/local/share/httpd/default"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Default predefined variables
-DATA_DIR="/data/nginx"   # set data directory
-CONF_DIR="/config/nginx" # set config directory
+# set data directory
+DATA_DIR="/data/nginx"
+# set config directory
+CONF_DIR="/config/nginx"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # set the containers etc directory
 ETC_DIR="/etc/nginx"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TMP_DIR="/tmp/nginx"
-RUN_DIR="/run/nginx"       # set scripts pid dir
-LOG_DIR="/data/logs/nginx" # set log directory
+# set scripts pid dir
+RUN_DIR="/run/nginx"
+# set log directory
+LOG_DIR="/data/logs/nginx"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the working dir
-WORK_DIR="" # set working directory
+# set working directory
+WORK_DIR=""
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Where to save passwords to
-ROOT_FILE_PREFIX="/config/secure/auth/root" # directory to save username/password for root user
-USER_FILE_PREFIX="/config/secure/auth/user" # directory to save username/password for normal user
+# directory to save username/password for root user
+ROOT_FILE_PREFIX="/config/secure/auth/root"
+# directory to save username/password for normal user
+USER_FILE_PREFIX="/config/secure/auth/user"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # root/admin user info password/random]
-root_user_name="${NGINX_ROOT_USER_NAME:-}" # root user name
-root_user_pass="${NGINX_ROOT_PASS_WORD:-}" # root user password
+# root user name
+root_user_name="${NGINX_ROOT_USER_NAME:-}"
+# root user password
+root_user_pass="${NGINX_ROOT_PASS_WORD:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Normal user info [password/random]
-user_name="${NGINX_USER_NAME:-}"      # normal user name
-user_pass="${NGINX_USER_PASS_WORD:-}" # normal user password
+# normal user name
+user_name="${NGINX_USER_NAME:-}"
+# normal user password
+user_pass="${NGINX_USER_PASS_WORD:-}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Overwrite variables from files
 __file_exists_with_content "${USER_FILE_PREFIX}/${SERVICE_NAME}_name" && user_name="$(<"${USER_FILE_PREFIX}/${SERVICE_NAME}_name")"
@@ -128,20 +139,28 @@ __file_exists_with_content "${ROOT_FILE_PREFIX}/${SERVICE_NAME}_pass" && root_us
 SERVICE_PORT="80"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # User to use to launch service - IE: postgres
-RUNAS_USER="root" # normally root
+# normally root
+RUNAS_USER="root"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # User and group in which the service switches to - IE: nginx,apache,mysql,postgres
-SERVICE_USER="nginx"  # execute command as another user
-SERVICE_GROUP="nginx" # Set the service group
+# execute command as another user
+SERVICE_USER="nginx"
+# Set the service group
+SERVICE_GROUP="nginx"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set user and group ID
-SERVICE_UID="0" # set the user id
-SERVICE_GID="0" # set the group id
+# set the user id
+SERVICE_UID="0"
+# set the group id
+SERVICE_GID="0"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # execute command variables - keep single quotes variables will be expanded later
-EXEC_CMD_BIN='nginx'                   # command to execute
-EXEC_CMD_ARGS='-c $ETC_DIR/nginx.conf' # command arguments
-EXEC_PRE_SCRIPT=''                     # execute script before
+# command to execute
+EXEC_CMD_BIN='nginx'
+# command arguments
+EXEC_CMD_ARGS='-c $ETC_DIR/nginx.conf'
+# execute script before
+EXEC_PRE_SCRIPT=''
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Is this service a web server
 IS_WEB_SERVER="yes"
@@ -184,11 +203,14 @@ CMD_ENV=""
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # use this function to update config files - IE: change port
 __update_conf_files() {
-  local exitCode=0                                               # default exit code
-  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}" # set hostname
+  # default exit code
+  local exitCode=0
+  # set hostname
+  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"
 
   # CD into temp to bybass any permission errors
-  cd /tmp || false # lets keep shellcheck happy by adding false
+  # lets keep shellcheck happy by adding false
+  cd /tmp || false
 
   # delete files
   #__rm ""
@@ -274,8 +296,10 @@ __update_conf_files() {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # function to run before executing
 __pre_execute() {
-  local exitCode=0                                               # default exit code
-  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}" # set hostname
+  # default exit code
+  local exitCode=0
+  # set hostname
+  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"
 
   # define commands
 
@@ -342,11 +366,15 @@ __pre_execute() {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # function to run after executing
 __post_execute() {
-  local exitCode=0                                               # default exit code
-  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}" # set hostname
+  # default exit code
+  local exitCode=0
+  # set hostname
+  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"
 
-  sleep 60                     # how long to wait before executing
-  echo "Running post commands" # message
+  # how long to wait before executing
+  sleep 60
+  # message
+  echo "Running post commands"
   # execute commands
   (
     sleep 20
@@ -369,7 +397,8 @@ __pre_message() {
 # use this function to setup ssl support
 __update_ssl_conf() {
   local exitCode=0
-  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}" # set hostname
+  # set hostname
+  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"
 
   return $exitCode
 }
@@ -390,7 +419,7 @@ __create_service_env() {
 #ENV_EXEC_PRE_SCRIPT="${ENV_EXEC_PRE_SCRIPT:-$EXEC_PRE_SCRIPT}"      # execute before commands
 #ENV_EXEC_CMD_BIN="${ENV_EXEC_CMD_BIN:-$EXEC_CMD_BIN}"               # command to execute
 #ENV_EXEC_CMD_ARGS="${ENV_EXEC_CMD_ARGS:-$EXEC_CMD_ARGS}"            # command arguments
-#ENV_EXEC_CMD_NAME="$(basename "$EXEC_CMD_BIN")"                     # set the binary name
+#ENV_EXEC_CMD_NAME="${EXEC_CMD_BIN##*/}"                     # set the binary name
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # root/admin user info [password/random]
 #ENV_ROOT_USER_NAME="${ENV_ROOT_USER_NAME:-$NGINX_ROOT_USER_NAME}"   # root user name
@@ -411,17 +440,28 @@ EOF
 # script to start server
 __run_start_script() {
   local runExitCode=0
-  local workdir="$(eval echo "${WORK_DIR:-}")"                   # expand variables
-  local cmd="$(eval echo "${EXEC_CMD_BIN:-}")"                   # expand variables
-  local args="$(eval echo "${EXEC_CMD_ARGS:-}")"                 # expand variables
-  local name="$(eval echo "${EXEC_CMD_NAME:-}")"                 # expand variables
-  local pre="$(eval echo "${EXEC_PRE_SCRIPT:-}")"                # expand variables
-  local extra_env="$(eval echo "${CMD_ENV//,/ }")"               # expand variables
-  local lc_type="$(eval echo "${LANG:-${LC_ALL:-$LC_CTYPE}}")"   # expand variables
-  local home="$(eval echo "${workdir//\/root/\/tmp\/docker}")"   # expand variables
-  local path="$(eval echo "$PATH")"                              # expand variables
-  local message="$(eval echo "")"                                # expand variables
-  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}" # set hostname
+  # expand variables
+  local workdir="$(eval echo "${WORK_DIR:-}")"
+  # expand variables
+  local cmd="$(eval echo "${EXEC_CMD_BIN:-}")"
+  # expand variables
+  local args="$(eval echo "${EXEC_CMD_ARGS:-}")"
+  # expand variables
+  local name="$(eval echo "${EXEC_CMD_NAME:-}")"
+  # expand variables
+  local pre="$(eval echo "${EXEC_PRE_SCRIPT:-}")"
+  # expand variables
+  local extra_env="$(eval echo "${CMD_ENV//,/ }")"
+  # expand variables
+  local lc_type="$(eval echo "${LANG:-${LC_ALL:-$LC_CTYPE}}")"
+  # expand variables
+  local home="$(eval echo "${workdir//\/root/\/tmp\/docker}")"
+  # expand variables
+  local path="$(eval echo "$PATH")"
+  # expand variables
+  local message="$(eval echo "")"
+  # set hostname
+  local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"
   [ -f "$CONF_DIR/$SERVICE_NAME.exec_cmd.sh" ] && . "$CONF_DIR/$SERVICE_NAME.exec_cmd.sh"
   if [ -z "$cmd" ]; then
     __post_execute 2>"/dev/stderr" | tee -p -a "$LOG_DIR/init.txt" >/dev/null
@@ -515,7 +555,7 @@ __pgrep() { __pcheck "${1:-$EXEC_CMD_BIN}" || __ps aux 2>/dev/null | grep -Fw " 
 # check if process is already running
 __proc_check() {
   cmd_bin="$(type -P "${1:-$EXEC_CMD_BIN}")"
-  cmd_name="$(basename "${cmd_bin:-$EXEC_CMD_NAME}")"
+  local _b="${cmd_bin:-$EXEC_CMD_NAME}"; cmd_name="${_b##*/}"
   if __pgrep "$cmd_bin" || __pgrep "$cmd_name"; then
     SERVICE_IS_RUNNING="true"
     touch "$SERVICE_PID_FILE"
@@ -529,29 +569,50 @@ __proc_check() {
 # Allow ENV_ variable - Import env file
 __file_exists_with_content "/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.sh" && . "/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.sh"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SERVICE_EXIT_CODE=0                                           # default exit code
-SERVICE_USER="${ENV_SERVICE_USER:-$SERVICE_USER}"             # execute command as another user
-SERVICE_UID="${ENV_UID:-${ENV_SERVICE_UID:-$SERVICE_UID}}"    # Set UID
-SERVICE_GID="${ENV_GID:-${ENV_SERVICE_GID:-$SERVICE_GID}}"    # Set GID
-SERVICE_PORT="${ENV_SERVICE_PORT:-$SERVICE_PORT}"             # port which service is listening on
-RUNAS_USER="${ENV_RUNAS_USER:-$RUNAS_USER}"                   # normally root
-WORK_DIR="${ENV_WORK_DIR:-$WORK_DIR}"                         # change to directory
-WWW_ROOT_DIR="${ENV_WWW_ROOT_DIR:-$WWW_ROOT_DIR}"             # set default web dir
-ETC_DIR="${ENV_ETC_DIR:-$ETC_DIR}"                            # set default etc dir
-DATA_DIR="${ENV_DATA_DIR:-$DATA_DIR}"                         # set default data dir
-CONF_DIR="${ENV_CONF_DIR:-$CONF_DIR}"                         # set default config dir
-DATABASE_DIR="${ENV_DATABASE_DIR:-$DATABASE_DIR}"             # set database dir
-PRE_EXEC_MESSAGE="${ENV_PRE_EXEC_MESSAGE:-$PRE_EXEC_MESSAGE}" # Show message before execute
+# default exit code
+SERVICE_EXIT_CODE=0
+# execute command as another user
+SERVICE_USER="${ENV_SERVICE_USER:-$SERVICE_USER}"
+# Set UID
+SERVICE_UID="${ENV_UID:-${ENV_SERVICE_UID:-$SERVICE_UID}}"
+# Set GID
+SERVICE_GID="${ENV_GID:-${ENV_SERVICE_GID:-$SERVICE_GID}}"
+# port which service is listening on
+SERVICE_PORT="${ENV_SERVICE_PORT:-$SERVICE_PORT}"
+# normally root
+RUNAS_USER="${ENV_RUNAS_USER:-$RUNAS_USER}"
+# change to directory
+WORK_DIR="${ENV_WORK_DIR:-$WORK_DIR}"
+# set default web dir
+WWW_ROOT_DIR="${ENV_WWW_ROOT_DIR:-$WWW_ROOT_DIR}"
+# set default etc dir
+ETC_DIR="${ENV_ETC_DIR:-$ETC_DIR}"
+# set default data dir
+DATA_DIR="${ENV_DATA_DIR:-$DATA_DIR}"
+# set default config dir
+CONF_DIR="${ENV_CONF_DIR:-$CONF_DIR}"
+# set database dir
+DATABASE_DIR="${ENV_DATABASE_DIR:-$DATABASE_DIR}"
+# Show message before execute
+PRE_EXEC_MESSAGE="${ENV_PRE_EXEC_MESSAGE:-$PRE_EXEC_MESSAGE}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # application specific
-EXEC_PRE_SCRIPT="${ENV_EXEC_PRE_SCRIPT:-$EXEC_PRE_SCRIPT}"                 # Pre
-EXEC_CMD_BIN="${ENV_EXEC_CMD_BIN:-$EXEC_CMD_BIN}"                          # command to execute
-EXEC_CMD_NAME="$(basename "$EXEC_CMD_BIN")"                                # set the binary name
-SERVICE_PID_FILE="/run/init.d/$EXEC_CMD_NAME.pid"                          # set the pid file location
-EXEC_CMD_ARGS="${ENV_EXEC_CMD_ARGS:-$EXEC_CMD_ARGS}"                       # command arguments
-SERVICE_PID_NUMBER="$(__pgrep)"                                            # check if running
-EXEC_CMD_BIN="$(type -P "$EXEC_CMD_BIN" || echo "$EXEC_CMD_BIN")"          # set full path
-EXEC_PRE_SCRIPT="$(type -P "$EXEC_PRE_SCRIPT" || echo "$EXEC_PRE_SCRIPT")" # set full path
+# Pre
+EXEC_PRE_SCRIPT="${ENV_EXEC_PRE_SCRIPT:-$EXEC_PRE_SCRIPT}"
+# command to execute
+EXEC_CMD_BIN="${ENV_EXEC_CMD_BIN:-$EXEC_CMD_BIN}"
+# set the binary name
+EXEC_CMD_NAME="${EXEC_CMD_BIN##*/}"
+# set the pid file location
+SERVICE_PID_FILE="/run/init.d/$EXEC_CMD_NAME.pid"
+# command arguments
+EXEC_CMD_ARGS="${ENV_EXEC_CMD_ARGS:-$EXEC_CMD_ARGS}"
+# check if running
+SERVICE_PID_NUMBER="$(__pgrep)"
+# set full path
+EXEC_CMD_BIN="$(type -P "$EXEC_CMD_BIN" || echo "$EXEC_CMD_BIN")"
+# set full path
+EXEC_PRE_SCRIPT="$(type -P "$EXEC_PRE_SCRIPT" || echo "$EXEC_PRE_SCRIPT")"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # create auth directories
 [ -n "$USER_FILE_PREFIX" ] && { [ -d "$USER_FILE_PREFIX" ] || mkdir -p "$USER_FILE_PREFIX"; }
