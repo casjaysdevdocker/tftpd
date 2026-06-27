@@ -404,6 +404,7 @@ __update_ssl_conf() {
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 __create_service_env() {
+  local exitCode=0
   cat <<EOF | tee "/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.sh" &>/dev/null
 #ENV_SERVICE_UID="${ENV_UID:-${ENV_SERVICE_UID:-$SERVICE_UID}}"      # Set UID
 #ENV_SERVICE_GID="${ENV_GID:-${ENV_SERVICE_GID:-$SERVICE_GID}}"      # Set GID
@@ -435,6 +436,32 @@ __create_service_env() {
 
 EOF
   __file_exists_with_content "/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.sh" || return 1
+  if [ ! -f "/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.local.sh" ]; then
+  	cat <<'EOF' >"/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.local.sh"
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+# Local overrides - sourced after the main env file.
+# Redefine any of these functions to customise behaviour.
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__run_precopy_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__execute_prerun_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__run_pre_execute_checks_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__update_conf_files_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__pre_execute_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__post_execute_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__pre_message_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+__update_ssl_conf_local() { true; }
+# - - - - - - - - - - - - - - - - - - - - - - - - -
+EOF
+  fi
+  __file_exists_with_content "/config/env/${SERVICE_NAME:-$SCRIPT_NAME}.local.sh" || exitCode=$((exitCode + 1))
+  return $exitCode
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # script to start server
